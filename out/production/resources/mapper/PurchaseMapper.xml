@@ -32,7 +32,7 @@
         <result column="created_at" property="createdAt"/>
     </resultMap>
 
-    <resultMap id="BuyerResult" type="User" autoMapping="false">
+    <resultMap id="UserResult" type="User" autoMapping="false">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="phone" property="phone" jdbcType="VARCHAR"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
@@ -43,7 +43,7 @@
 
     <insert id="insertPurchase" keyColumn="id" keyProperty="id"
             parameterType="Purchase" useGeneratedKeys="true">
-        INSERT INTO purchase (vendor_id, tips) VALUES (#{vendor.id}, @#{tips})
+        INSERT INTO purchase (vendor_id, tips) VALUES (#{buyer.id}, #{tips})
     </insert>
 
     <select id="selectPurchaseById" resultMap="PurchaseResult">
@@ -69,7 +69,7 @@
     <insert id="insertPurchaseEntry" keyColumn="id" keyProperty="id"
             parameterType="PurchaseEntry" useGeneratedKeys="true">
         INSERT INTO purchase_entry (fodder_id, purchase_id, quantity, purchase_price, sell_price)
-        VALUES (#{fodder.id}, #{purchase.id}, #{quantity}, #{purchasePrice}, #{sellPrice})
+        VALUES (#{fodder.id}, #{purchaseId}, #{quantity}, #{purchasePrice}, #{sellPrice})
     </insert>
 
     <select id="selectPurchaseEntriesByPurchaseId" resultMap="PurchaseEntryResult">

@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Fodder extends BaseModel {
 
-    private long id;
+    private Long id;
     private String name; // 饲料名称，key
     @SerializedName("fodder_spec")
     private String fodderSpec; // 饲料规格，key
@@ -25,11 +25,11 @@ public class Fodder extends BaseModel {
         this.fodderSpec = fodderSpec;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

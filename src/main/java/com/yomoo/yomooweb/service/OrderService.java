@@ -26,10 +26,13 @@ public class OrderService {
     private FodderMapper fodderMapper;
 
     public void addOrder(Order order) {
-        OrderEntry entry = order.getOrderEntries().get(0);
-        orderMapper.insertOrderEntry(entry);
+//        OrderEntry entry = order.getOrderEntries().get(0);
         orderMapper.insertOrder(order);
-        fodderMapper.updateFodderOfVendorAfterSell(entry);
+    }
+
+    public void addOrderEntry(OrderEntry entry) {
+        orderMapper.insertOrderEntry(entry);
+        fodderMapper.updateFodderOfVendorAfterSell(entry.getFv());
     }
 
     public List<Order> getAllOrdersByFarmer(long farmerId, String offset) {

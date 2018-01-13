@@ -1,12 +1,15 @@
 package com.yomoo.yomooweb.service;
 
+import com.yomoo.yomooweb.entity.FodderOfVendor;
 import com.yomoo.yomooweb.entity.Purchase;
 import com.yomoo.yomooweb.entity.PurchaseEntry;
+import com.yomoo.yomooweb.entity.User;
 import com.yomoo.yomooweb.mapper.FodderMapper;
 import com.yomoo.yomooweb.mapper.PurchaseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,9 +28,20 @@ public class PurchaseService {
 
     public void addPurchase(Purchase purchase) {
         purchaseMapper.insertPurchase(purchase);
-        PurchaseEntry entry = purchase.getPurchaseEntries().get(0);
+    }
+
+    public void addPurchaseEntry(PurchaseEntry entry, User vendor) {
         purchaseMapper.insertPurchaseEntry(entry);
-        fodderMapper.updateFodderOfVendorAfterPurchase(entry);
+        Long fodderId = entry.getFodder().getId();
+        FodderOfVendor fv;
+        // 如果没有则插入新数据；之前有记录则更新数据
+        if (fodderMapper.selectFodderOfVendorByFodderAndVendor(fodderId, vendor.getId()) == null) {
+            fv = new FodderOfVendor(entry.getFodder(), vendor, entry.getSellPrice(), entry.getQuantity());
+            fodderMapper.insertFodderOfVendor(fv);
+        } else {
+            fv = fodderMapper.selectFodderOfVendorByFodderAndVendor(fodderId, vendor.getId());
+            fodderMapper.updateFodderOfVendorAfterPurchase(fv.getId());
+        }
     }
 
     public List<Purchase> getPurchasesByVendorId(long vendorId) {

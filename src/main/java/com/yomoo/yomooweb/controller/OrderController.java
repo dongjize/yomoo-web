@@ -51,8 +51,8 @@ public class OrderController extends BaseController {
      * @param orderType
      * @param response
      */
-    @RequestMapping(path = {"/farmer/{farmer_id}/order_fodder"}, method = RequestMethod.POST)
-    public void postFodderOrder(@PathVariable("farmer_id") long farmerId,
+    @RequestMapping(path = {"/farmer/order_fodder"}, method = RequestMethod.POST)
+    public void postFodderOrder(@RequestParam("farmer_id") long farmerId,
                                 @RequestParam("fv_id") long fvId,
                                 @RequestParam("quantity") int quantity,
                                 @RequestParam("order_type") String orderType,
@@ -69,21 +69,23 @@ public class OrderController extends BaseController {
             User vendor = fv.getVendor();
             Farmer farmer = farmerService.getFarmerById(farmerId);
 
+            Order order = new Order();
+            order.setBuyer(farmer);
+            order.setVendor(vendor);
+            order.setOrderType(orderType);
+            order.setTips("");
+            orderService.addOrder(order);
+
             List<OrderEntry> orderEntries = new ArrayList<>();
             OrderEntry entry = new OrderEntry();
             entry.setQuantity(quantity);
             entry.setFv(fv);
             entry.setSellPrice(fv.getSellPrice());
             orderEntries.add(entry); // TODO: 暂且每个Order只有一个Entry
+            orderService.addOrderEntry(entry);
 
-            Order order = new Order();
             order.setOrderEntries(orderEntries);
-            order.setBuyer(farmer);
-            order.setVendor(vendor);
-            order.setOrderType(orderType);
-            order.setTips("");
 
-            orderService.addOrder(order);
             dataMap.put("order", order);
             result = resultMapping(HttpStatusCode.SUCCESS, "请求成功", dataMap);
         } catch (Exception e) {

@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class Order extends BaseModel {
 
-    private long id;
+    private Long id;
 
     @SerializedName("order_entries")
     private List<OrderEntry> orderEntries; // 订单条目，一对多
@@ -31,11 +31,11 @@ public class Order extends BaseModel {
     public static final String OWED_ORDER = "owed";
     public static final String PAYED_ORDER = "payed";
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

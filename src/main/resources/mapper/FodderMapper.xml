@@ -13,7 +13,7 @@
     </resultMap>
 
     <insert id="insertFodder" keyColumn="id" keyProperty="id"
-            parameterType="long" useGeneratedKeys="true">
+            parameterType="Fodder" useGeneratedKeys="true">
         INSERT INTO fodder (name, fodder_spec, description)
         VALUES (#{name}, #{fodderSpec}, #{description})
     </insert>
@@ -48,13 +48,13 @@
     <update id="updateFodderOfVendorAfterPurchase">
         UPDATE fodder_vendor
         SET stock = stock + #{quantity}
-        WHERE id = #{fodderOfVendor.id}
+        WHERE id = #{id}
     </update>
 
     <update id="updateFodderOfVendorAfterSell">
         UPDATE fodder_vendor
         SET stock = stock - #{quantity}
-        WHERE id = #{fodderOfVendor.id}
+        WHERE id = #{fv.id}
     </update>
 
     <select id="selectFodderOfVendorByFodderAndVendor" resultMap="FodderOfVendorResult">

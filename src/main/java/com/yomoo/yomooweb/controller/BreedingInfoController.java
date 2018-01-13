@@ -74,7 +74,7 @@ public class BreedingInfoController extends BaseController {
      * @param offset
      * @param response
      */
-    @RequestMapping(path = {"/breeding_info"}, method = {RequestMethod.GET})
+    @RequestMapping(path = {"/breeding_info_list"}, method = {RequestMethod.GET})
     public void getBreedingInfoList(@RequestParam(value = "offset", required = false, defaultValue = "0") String offset,
                                     HttpServletResponse response) {
         Map<String, Object> dataMap = new HashMap<>();

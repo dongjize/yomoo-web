@@ -13,7 +13,7 @@
     </resultMap>
 
     <insert id="insertFodder" keyColumn="id" keyProperty="id"
-            parameterType="long" useGeneratedKeys="true">
+            parameterType="Fodder" useGeneratedKeys="true">
         INSERT INTO fodder (name, fodder_spec, description)
         VALUES (#{name}, #{fodderSpec}, #{description})
     </insert>

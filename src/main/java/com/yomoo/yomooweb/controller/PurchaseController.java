@@ -4,6 +4,7 @@ import com.yomoo.yomooweb.entity.*;
 import com.yomoo.yomooweb.service.FodderService;
 import com.yomoo.yomooweb.service.PurchaseService;
 import com.yomoo.yomooweb.service.UserService;
+import com.yomoo.yomooweb.utils.Constants;
 import com.yomoo.yomooweb.utils.HttpStatusCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,8 +42,8 @@ public class PurchaseController extends BaseController {
     @Autowired
     private PurchaseService purchaseService;
 
-    @RequestMapping(path = {"/vendor/{vender_id}/add_purchase"}, method = RequestMethod.POST)
-    public void addPurchase(@PathVariable("vendor_id") long vendorId,
+    @RequestMapping(path = {"vendor/add_purchase"}, method = RequestMethod.POST)
+    public void addPurchase(@RequestParam("vendor_id") Long vendorId,
                             @RequestParam("fodder_name") String fodderName,
                             @RequestParam("fodder_spec") String fodderSpec,
                             @RequestParam("quantity") int quantity,
@@ -68,16 +70,18 @@ public class PurchaseController extends BaseController {
 
             // 添加purchase
             Purchase purchase = new Purchase();
-
-            PurchaseEntry entry = new PurchaseEntry(fodder, quantity, purchasePrice, sellPrice);
-            List<PurchaseEntry> entries = new ArrayList<>();
-            entries.add(entry); // TODO: 暂且每个Purchase只有一个Entry
-
-            purchase.setPurchaseEntries(entries);
             purchase.setBuyer(vendor);
             purchase.setTips("");
-
             purchaseService.addPurchase(purchase);
+
+            PurchaseEntry entry = new PurchaseEntry(fodder, quantity, purchasePrice, sellPrice);
+            entry.setPurchaseId(purchase.getId());
+            List<PurchaseEntry> entries = new ArrayList<>();
+            entries.add(entry); // TODO: 暂且每个Purchase只有一个Entry
+            purchaseService.addPurchaseEntry(entry, vendor);
+
+            purchase.setPurchaseEntries(entries);
+
             dataMap.put("purchase", purchase);
             result = resultMapping(HttpStatusCode.SUCCESS, "录入成功", dataMap);
         } catch (Exception e) {
@@ -87,4 +91,29 @@ public class PurchaseController extends BaseController {
             printResult(response, result);
         }
     }
+
+
+    @RequestMapping(path = {"vendor/purchase_list"}, method = RequestMethod.GET)
+    public void getPurchaseList(@RequestParam("vendor_id") Long vendorId,
+                                @RequestParam(value = "offset", required = false, defaultValue = "0") String offset,
+                                HttpServletResponse response) {
+        Map<String, Object> dataMap = new HashMap<>();
+        String result = "";
+        try {
+            int parsedOffset = Integer.parseInt(offset);
+            int nextOffset = parsedOffset + Constants.LIMIT;
+            List<Purchase> purchaseList = purchaseService.getPurchasesByVendorId(vendorId);
+            dataMap.put("list", purchaseList);
+            dataMap.put("offset", nextOffset);
+            result = resultMapping(HttpStatusCode.SUCCESS, "录入成功", dataMap);
+        } catch (Exception e) {
+            logger.error("EXCEPTION: " + e.getMessage());
+            result = resultMapping(HttpStatusCode.SERVER_ERROR, e.getMessage(), dataMap);
+        } finally {
+            printResult(response, result);
+
+        }
+    }
+
+
 }

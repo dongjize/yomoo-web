@@ -105,12 +105,12 @@ public class UserController extends BaseController {
     @RequestMapping(path = {"/complete_info"}, method = RequestMethod.POST)
     public void completeInfo(@RequestParam("id") long id,
                              @RequestParam("name") String name,
-                             @RequestParam(value = "intro", required = false) String intro,
-                             @RequestParam(value = "village", required = false) String village,
-                             @RequestParam(value = "group", required = false) String group,
-                             @RequestParam(value = "street_num", required = false) String streetNum,
-                             @RequestParam(value = "livestock", required = false) String livestock,
-                             @RequestParam(value = "exp_livestock", required = false) String expLivestock,
+                             @RequestParam(value = "village", defaultValue = "", required = false) String village,
+                             @RequestParam(value = "group", defaultValue = "", required = false) String group,
+                             @RequestParam(value = "street_num", defaultValue = "", required = false) String streetNum,
+                             @RequestParam(value = "livestock", defaultValue = "", required = false) String livestock,
+                             @RequestParam(value = "exp_livestock", defaultValue = "", required = false) String expLivestock,
+                             @RequestParam(value = "intro", defaultValue = "", required = false) String intro,
                              HttpServletResponse response) {
         Map<String, Object> dataMap = new HashMap<>();
         String result = "";
@@ -136,7 +136,7 @@ public class UserController extends BaseController {
             }
             result = resultMapping(HttpStatusCode.SUCCESS, "完善资料成功", dataMap);
         } catch (Exception e) {
-            logger.error("注册异常" + e.getMessage());
+            logger.error("完善资料异常" + e.getMessage());
 //            model.addAttribute("msg", "服务器错误");
             result = resultMapping(HttpStatusCode.SERVER_ERROR, e.getMessage(), dataMap);
         } finally {

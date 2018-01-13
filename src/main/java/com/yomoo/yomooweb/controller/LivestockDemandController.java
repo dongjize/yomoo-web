@@ -78,7 +78,7 @@ public class LivestockDemandController extends BaseController {
      * @param offset
      * @param response
      */
-    @RequestMapping(path = {"/livestock_demand"}, method = {RequestMethod.GET})
+    @RequestMapping(path = {"/livestock_demand_list"}, method = {RequestMethod.GET})
     public void getLivestockDemandList(@RequestParam(value = "offset", required = false, defaultValue = "0") String offset,
                                           HttpServletResponse response) {
         Map<String, Object> dataMap = new HashMap<>();

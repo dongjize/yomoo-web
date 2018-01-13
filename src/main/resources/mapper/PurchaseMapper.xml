@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yomoo.yomooweb.mapper.PurchaseMapper">
+
+    <resultMap id="PurchaseResult" type="Purchase" autoMapping="false">
+        <id column="id" property="id"/>
+        <result column="tips" property="tips"/>
+        <association column="vendor_id" property="buyer" select="selectPublisher"/>
+        <collection property="purchaseEntries" select=""/>
+    </resultMap>
+
+    <resultMap id="PurchaseEntryResult" type="PurchaseEntry" autoMapping="false">
+        <id column="id" property="id"/>
+        <result column="purchase_price" property="purchasePrice"/>
+        <result column="sell_price" property="sellPrice"/>
+        <result column="quantity" property="quantity"/>
+        <association column="fodder_id" property="fodder" resultMap="FodderResult" select="selectFodderById"
+                     autoMapping="false"/>
+    </resultMap>
+
+    <resultMap id="FodderResult" type="Fodder" autoMapping="false">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="fodder_spec" property="fodderSpec"/>
+        <result column="description" property="description"/>
+        <result column="created_at" property="createdAt"/>
+    </resultMap>
+
+    <resultMap id="BuyerResult" type="User" autoMapping="false">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="intro" property="intro" jdbcType="VARCHAR"/>
+        <result column="created_at" property="createdAt" jdbcType="DATE"/>
+    </resultMap>
+
+    <insert id="insertPurchase" keyColumn="id" keyProperty="id"
+            parameterType="Purchase" useGeneratedKeys="true">
+        INSERT INTO purchase (vendor_id, tips) VALUES (#{vendor.id}, @#{tips})
+    </insert>
+
+    <select id="selectPurchaseById" resultMap="PurchaseResult">
+        SELECT *
+        FROM purchase
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectPurchasesByVendorId" resultMap="PurchaseResult">
+        SELECT *
+        FROM purchase
+        WHERE vendor_id = #{vendorId};
+    </select>
+
+    <select id="selectPurchaseEntries" resultMap="PurchaseEntryResult">
+        SELECT *
+        FROM purchase
+            LEFT JOIN purchase_entry ON purchase.id = purchase_entry.purchase_id
+        WHERE purchase.id = #{id};
+    </select>
+
+
+    <insert id="insertPurchaseEntry" keyColumn="id" keyProperty="id"
+            parameterType="PurchaseEntry" useGeneratedKeys="true">
+        INSERT INTO purchase_entry (fodder_id, purchase_id, quantity, purchase_price, sell_price)
+        VALUES (#{fodder.id}, #{purchase.id}, #{quantity}, #{purchasePrice}, #{sellPrice}})
+    </insert>
+
+    <select id="selectPurchaseEntriesByPurchaseId" resultMap="PurchaseEntryResult">
+        SELECT *
+        FROM purchase_entry
+        WHERE purchase_id = #{purchaseId};
+    </select>
+
+    <select id="selectPurchaseEntryById" resultMap="PurchaseEntryResult">
+        SELECT *
+        FROM purchase_entry
+        WHERE id = #{id};
+    </select>
+
+    <select id="selectFodderById" resultMap="FodderResult">
+        SELECT *
+        FROM fodder
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectPublisher" resultMap="UserResult">
+        SELECT *
+        FROM user
+        WHERE id = #{id}
+    </select>
+</mapper>

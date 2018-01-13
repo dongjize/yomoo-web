@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yomoo.yomooweb.mapper.OrderMapper">
+
+    <resultMap id="OrderResult" type="Order" autoMapping="false">
+        <id column="id" property="id"/>
+        <result column="order_type" property="orderType"/>
+        <result column="tips" property="tips"/>
+        <association property="vendor" column="vendor_id" select="selectVendorById"/>
+        <association property="farmer" column="farmer_id" select="selectFarmerById"/>
+        <collection property="orderEntries" select="selectOrderEntriesByOrderId"/>
+    </resultMap>
+
+    <resultMap id="OrderEntryResult" type="OrderEntry" autoMapping="false">
+        <id column="id" property="id"/>
+        <result column="quantity" property="quantity"/>
+        <result column="sell_price" property="sellPrice"/>
+        <association property="fv" column="fv_id" select="selectFodderOfVendorId"/>
+    </resultMap>
+
+    <resultMap id="FarmerResult" type="Farmer" autoMapping="false">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="intro" property="intro" jdbcType="VARCHAR"/>
+        <result column="created_at" property="createdAt" jdbcType="DATE"/>
+    </resultMap>
+
+    <resultMap id="VendorResult" type="User" autoMapping="false">
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="intro" property="intro" jdbcType="VARCHAR"/>
+        <result column="created_at" property="createdAt" jdbcType="DATE"/>
+        <association column="id" property="id" select="selectVendorById"/>
+    </resultMap>
+
+    <insert id="insertOrder" keyColumn="id" keyProperty="id" parameterType="Order" useGeneratedKeys="true">
+        INSERT INTO `order` (farmer_id, vendor_id, order_type, tips)
+        VALUES (#{buyer.id}, #{vendor.id}, #{orderType}, #{tips})
+    </insert>
+
+    <select id="selectOrdersByFarmerId" resultMap="OrderResult">
+        SELECT *
+        FROM `order`
+        WHERE farmer_id = #{farmerId}
+        LIMIT 20 OFFSET #{offset}
+    </select>
+
+    <insert id="insertOrderEntry" keyColumn="id" keyProperty="id" parameterType="OrderEntry" useGeneratedKeys="true">
+        INSERT INTO order_entry (fv_id, order_id, quantity, sell_price)
+        VALUES (#{fv.id}, #{orderId}, #{quantity}, #{sellPrice})
+    </insert>
+
+    <select id="selectOrderEntriesByOrderId" resultMap="OrderResult">
+        SELECT *
+        FROM order_entry
+        WHERE order_id = #{orderId};
+    </select>
+
+    <select id="selectVendorById" resultMap="VendorResult">
+        SELECT *
+        FROM user
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectFarmerById" resultMap="FarmerResult">
+        SELECT *
+        FROM yomoo.farmer
+            INNER JOIN yomoo.user ON yomoo.farmer.id = yomoo.user.id
+        WHERE farmer.id = #{id}
+    </select>
+</mapper>

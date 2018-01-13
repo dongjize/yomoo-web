@@ -10,7 +10,13 @@
         <result column="tips" property="tips"/>
         <association property="vendor" column="vendor_id" select="selectVendorById"/>
         <association property="farmer" column="farmer_id" select="selectFarmerById"/>
-        <collection property="orderEntries" select="selectOrderEntriesByOrderId"/>
+        <!--<collection property="orderEntries" select="selectOrderEntriesByOrderId"/>-->
+        <collection property="orderEntries" column="id" ofType="OrderEntry">
+            <id column="id" property="id"/>
+            <result column="quantity" property="quantity"/>
+            <result column="sell_price" property="sellPrice"/>
+            <association property="fv" column="fv_id" select="selectFodderOfVendorId"/>
+        </collection>
     </resultMap>
 
     <resultMap id="OrderEntryResult" type="OrderEntry" autoMapping="false">

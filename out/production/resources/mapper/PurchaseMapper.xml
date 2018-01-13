@@ -8,16 +8,22 @@
         <id column="id" property="id"/>
         <result column="tips" property="tips"/>
         <association column="vendor_id" property="buyer" select="selectPublisher"/>
-        <collection property="purchaseEntries" select=""/>
+        <collection property="purchaseEntries" column="id" ofType="PurchaseEntry">
+            <id column="id" property="id"/>
+            <result column="purchase_price" property="purchasePrice"/>
+            <result column="sell_price" property="sellPrice"/>
+            <result column="quantity" property="quantity"/>
+        </collection>
     </resultMap>
+
 
     <resultMap id="PurchaseEntryResult" type="PurchaseEntry" autoMapping="false">
         <id column="id" property="id"/>
         <result column="purchase_price" property="purchasePrice"/>
         <result column="sell_price" property="sellPrice"/>
         <result column="quantity" property="quantity"/>
-        <association column="fodder_id" property="fodder" resultMap="FodderResult" select="selectFodderById"
-                     autoMapping="false"/>
+        <association column="fodder_id" property="fodder" resultMap="FodderResult"
+                     select="selectFodderById" autoMapping="false"/>
     </resultMap>
 
     <resultMap id="FodderResult" type="Fodder" autoMapping="false">
@@ -65,7 +71,7 @@
     <insert id="insertPurchaseEntry" keyColumn="id" keyProperty="id"
             parameterType="PurchaseEntry" useGeneratedKeys="true">
         INSERT INTO purchase_entry (fodder_id, purchase_id, quantity, purchase_price, sell_price)
-        VALUES (#{fodder.id}, #{purchase.id}, #{quantity}, #{purchasePrice}, #{sellPrice}})
+        VALUES (#{fodder.id}, #{purchase.id}, #{quantity}, #{purchasePrice}, #{sellPrice})
     </insert>
 
     <select id="selectPurchaseEntriesByPurchaseId" resultMap="PurchaseEntryResult">

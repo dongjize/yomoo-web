@@ -8,22 +8,20 @@
         <id column="id" property="id"/>
         <result column="tips" property="tips"/>
         <association column="vendor_id" property="buyer" select="selectPublisher"/>
-        <collection property="purchaseEntries" column="id" ofType="PurchaseEntry">
-            <id column="id" property="id"/>
-            <result column="purchase_price" property="purchasePrice"/>
-            <result column="sell_price" property="sellPrice"/>
-            <result column="quantity" property="quantity"/>
+        <collection property="purchaseEntries" column="id" ofType="PurchaseEntry" select="selectPurchaseEntries">
+            <!--<id column="id" property="id"/>-->
+            <!--<result column="purchase_price" property="purchasePrice"/>-->
+            <!--<result column="sell_price" property="sellPrice"/>-->
+            <!--<result column="quantity" property="quantity"/>-->
         </collection>
     </resultMap>
-
 
     <resultMap id="PurchaseEntryResult" type="PurchaseEntry" autoMapping="false">
         <id column="id" property="id"/>
         <result column="purchase_price" property="purchasePrice"/>
         <result column="sell_price" property="sellPrice"/>
         <result column="quantity" property="quantity"/>
-        <association column="fodder_id" property="fodder" resultMap="FodderResult"
-                     select="selectFodderById" autoMapping="false"/>
+        <association property="fodder" column="fodder_id" resultMap="FodderResult"/>
     </resultMap>
 
     <resultMap id="FodderResult" type="Fodder" autoMapping="false">

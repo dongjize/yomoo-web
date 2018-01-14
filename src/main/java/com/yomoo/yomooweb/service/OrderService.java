@@ -1,11 +1,9 @@
 package com.yomoo.yomooweb.service;
 
-import com.yomoo.yomooweb.entity.FodderOfVendor;
 import com.yomoo.yomooweb.entity.Order;
 import com.yomoo.yomooweb.entity.OrderEntry;
 import com.yomoo.yomooweb.mapper.FodderMapper;
 import com.yomoo.yomooweb.mapper.OrderMapper;
-import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,4 +60,7 @@ public class OrderService {
         return orders;
     }
 
+    public List<Order> getOrdersByKeyword(String keyword, int offset) {
+        return orderMapper.selectOrdersByKeyword(keyword, offset);
+    }
 }

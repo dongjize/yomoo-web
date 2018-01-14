@@ -31,4 +31,5 @@ public interface OrderMapper {
 
     List<OrderEntry> selectOrderEntriesByOrderId(long orderId);
 
+    List<Order> selectOrdersByKeyword(@Param("keyword") String keyword, @Param("offset") int offset);
 }

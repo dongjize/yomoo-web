@@ -6,6 +6,8 @@ import com.yomoo.yomooweb.mapper.FarmerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Description:
  *
@@ -30,6 +32,10 @@ public class FarmerService {
 
     public Farmer getFarmerById(long id) {
         return farmerMapper.selectById(id);
+    }
+
+    public List<Farmer> getFarmersByKeyword(String keyword, int offset) {
+        return farmerMapper.selectFarmersByKeyword(keyword, offset);
     }
 
 }

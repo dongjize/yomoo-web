@@ -6,9 +6,6 @@ import com.yomoo.yomooweb.service.FodderService;
 import com.yomoo.yomooweb.service.OrderService;
 import com.yomoo.yomooweb.utils.Constants;
 import com.yomoo.yomooweb.utils.HttpStatusCode;
-import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.common.SolrDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,18 +41,6 @@ public class OrderController extends BaseController {
 
     @Autowired
     private FarmerService farmerService;
-
-    @Autowired
-    private SolrClient solrClient;
-
-
-    @RequestMapping()
-    public String testSolr() throws IOException, SolrServerException {
-        SolrDocument document = solrClient.getById("test", "7");
-        System.out.println(document);
-        return document.toString();
-
-    }
 
 
     /**
@@ -171,5 +156,26 @@ public class OrderController extends BaseController {
         }
     }
 
+
+    @RequestMapping(path = {"/orders_query"}, method = {RequestMethod.GET})
+    public void queryOrderList(@RequestParam(value = "key", required = false, defaultValue = "") String keyword,
+                                @RequestParam(value = "offset", required = false, defaultValue = "0") String offset,
+                                HttpServletResponse response) {
+        Map<String, Object> dataMap = new HashMap<>();
+        String result = "";
+        try {
+            int parsedOffset = Integer.parseInt(offset);
+            int nextOffset = parsedOffset + Constants.LIMIT;
+            List<Order> orderList = orderService.getOrdersByKeyword(keyword, parsedOffset);
+            dataMap.put("list", orderList);
+            dataMap.put("offset", nextOffset);
+            result = resultMapping(HttpStatusCode.SUCCESS, "请求成功", dataMap);
+        } catch (Exception e) {
+            logger.error("EXCEPTION: " + e.getMessage());
+            result = resultMapping(HttpStatusCode.SERVER_ERROR, e.getMessage(), dataMap);
+        } finally {
+            printResult(response, result);
+        }
+    }
 
 }

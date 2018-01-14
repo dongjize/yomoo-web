@@ -52,14 +52,16 @@
     <select id="selectUsersByKeyword" resultMap="UserResult">
         SELECT *
         FROM user
-        WHERE phone LIKE '%#{keyword}%' AND type = #{type}
+        WHERE phone LIKE '%' #{keyword} '%' OR name LIKE '%' #{keyword} '%' OR
+              intro LIKE '%' #{keyword} '%' AND type = #{type}
         LIMIT 20 OFFSET #{offset}
     </select>
 
     <select id="selectUsersByKeywordNoType" resultMap="UserResult">
         SELECT *
         FROM user
-        WHERE phone LIKE '%#{keyword}%'
+        WHERE phone LIKE '%' #{keyword} '%' OR name LIKE '%' #{keyword} '%' OR
+              intro LIKE '%' #{keyword} '%'
         LIMIT 20 OFFSET #{offset}
     </select>
 </mapper>

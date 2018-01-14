@@ -57,4 +57,15 @@
         WHERE id = #{id}
     </select>
 
+    <select id="selectFarmersByKeyword" resultMap="FarmerResult">
+        SELECT *
+        FROM yomoo.farmer
+            INNER JOIN yomoo.user ON yomoo.farmer.id = yomoo.user.id
+        WHERE phone LIKE '%' #{keyword} '%' OR name LIKE '%' #{keyword} '%' OR
+              intro LIKE '%' #{keyword} '%' OR village LIKE '%' #{keyword} '%' OR
+              group_ LIKE '%' #{keyword} '%' OR street_num LIKE '%' #{keyword} '%' OR
+              livestock LIKE '%' #{keyword} '%' OR exp_livestock LIKE '%' #{keyword} '%'
+        LIMIT 20 OFFSET #{offset}
+    </select>
+
 </mapper>

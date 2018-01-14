@@ -48,13 +48,13 @@
     <update id="updateFodderOfVendorAfterPurchase">
         UPDATE fodder_vendor
         SET stock = stock + #{quantity}
-        WHERE id = #{fodderOfVendor.id}
+        WHERE id = #{id}
     </update>
 
     <update id="updateFodderOfVendorAfterSell">
         UPDATE fodder_vendor
         SET stock = stock - #{quantity}
-        WHERE id = #{fodderOfVendor.id}
+        WHERE id = #{fv.id}
     </update>
 
     <select id="selectFodderOfVendorByFodderAndVendor" resultMap="FodderOfVendorResult">
@@ -67,6 +67,20 @@
         SELECT *
         FROM fodder_vendor
         WHERE id = #{id}
+    </select>
+
+    <select id="selectFodderOfVendorByFodderId" resultMap="FodderOfVendorResult">
+        SELECT *
+        FROM fodder_vendor
+        WHERE fodder_id = #{fodderId}
+        LIMIT 20 OFFSET #{offset}
+    </select>
+
+    <select id="selectFodderOfVendorByVendorId" resultMap="FodderOfVendorResult">
+        SELECT *
+        FROM fodder_vendor
+        WHERE vendor_id = #{vendorId}
+        LIMIT 20 OFFSET #{offset}
     </select>
 
     <resultMap id="VendorResult" type="User" autoMapping="false">

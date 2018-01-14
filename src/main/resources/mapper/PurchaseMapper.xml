@@ -7,7 +7,8 @@
     <resultMap id="PurchaseResult" type="Purchase" autoMapping="false">
         <id column="id" property="id"/>
         <result column="tips" property="tips"/>
-        <association column="vendor_id" property="buyer" select="selectPublisher"/>
+        <result column="created_at" property="createdAt"/>
+        <association property="buyer" column="vendor_id" select="selectPublisherById"/>
         <collection property="purchaseEntries" column="id" ofType="PurchaseEntry" select="selectPurchaseEntries">
             <!--<id column="id" property="id"/>-->
             <!--<result column="purchase_price" property="purchasePrice"/>-->
@@ -21,7 +22,7 @@
         <result column="purchase_price" property="purchasePrice"/>
         <result column="sell_price" property="sellPrice"/>
         <result column="quantity" property="quantity"/>
-        <association property="fodder" column="fodder_id" resultMap="FodderResult"/>
+        <association property="fodder" column="fodder_id" select="selectFodderById"/>
     </resultMap>
 
     <resultMap id="FodderResult" type="Fodder" autoMapping="false">
@@ -90,7 +91,7 @@
         WHERE id = #{id}
     </select>
 
-    <select id="selectPublisher" resultMap="UserResult">
+    <select id="selectPublisherById" resultMap="UserResult">
         SELECT *
         FROM user
         WHERE id = #{id}

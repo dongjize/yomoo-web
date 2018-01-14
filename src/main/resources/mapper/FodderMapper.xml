@@ -69,6 +69,20 @@
         WHERE id = #{id}
     </select>
 
+    <select id="selectFodderOfVendorByFodderId" resultMap="FodderOfVendorResult">
+        SELECT *
+        FROM fodder_vendor
+        WHERE fodder_id = #{fodderId}
+        LIMIT 20 OFFSET #{offset}
+    </select>
+
+    <select id="selectFodderOfVendorByVendorId" resultMap="FodderOfVendorResult">
+        SELECT *
+        FROM fodder_vendor
+        WHERE vendor_id = #{vendorId}
+        LIMIT 20 OFFSET #{offset}
+    </select>
+
     <resultMap id="VendorResult" type="User" autoMapping="false">
         <id column="id" property="id" jdbcType="BIGINT"/>
         <result column="phone" property="phone" jdbcType="VARCHAR"/>

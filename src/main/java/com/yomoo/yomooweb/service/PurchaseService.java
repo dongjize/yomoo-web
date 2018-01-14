@@ -40,7 +40,7 @@ public class PurchaseService {
             fodderMapper.insertFodderOfVendor(fv);
         } else {
             fv = fodderMapper.selectFodderOfVendorByFodderAndVendor(fodderId, vendor.getId());
-            fodderMapper.updateFodderOfVendorAfterPurchase(fv.getId());
+            fodderMapper.updateFodderOfVendorAfterPurchase(fv.getId(), entry.getQuantity());
         }
     }
 

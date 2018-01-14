@@ -42,6 +42,17 @@ public class PurchaseController extends BaseController {
     @Autowired
     private PurchaseService purchaseService;
 
+    /**
+     * 销售商进货
+     *
+     * @param vendorId
+     * @param fodderName
+     * @param fodderSpec
+     * @param quantity
+     * @param purchasePrice
+     * @param sellPrice
+     * @param response
+     */
     @RequestMapping(path = {"vendor/add_purchase"}, method = RequestMethod.POST)
     public void addPurchase(@RequestParam("vendor_id") Long vendorId,
                             @RequestParam("fodder_name") String fodderName,
@@ -93,6 +104,13 @@ public class PurchaseController extends BaseController {
     }
 
 
+    /**
+     * 销售商查看进货列表
+     *
+     * @param vendorId
+     * @param offset
+     * @param response
+     */
     @RequestMapping(path = {"vendor/purchase_list"}, method = RequestMethod.GET)
     public void getPurchaseList(@RequestParam("vendor_id") Long vendorId,
                                 @RequestParam(value = "offset", required = false, defaultValue = "0") String offset,

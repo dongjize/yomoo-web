@@ -78,11 +78,12 @@ public class OrderController extends BaseController {
 
             List<OrderEntry> orderEntries = new ArrayList<>();
             OrderEntry entry = new OrderEntry();
+            entry.setOrderId(order.getId());
             entry.setQuantity(quantity);
             entry.setFv(fv);
             entry.setSellPrice(fv.getSellPrice());
             orderEntries.add(entry); // TODO: 暂且每个Order只有一个Entry
-            orderService.addOrderEntry(entry);
+            orderService.addOrderEntry(fv.getId(), entry);
 
             order.setOrderEntries(orderEntries);
 
@@ -104,8 +105,8 @@ public class OrderController extends BaseController {
      * @param offset
      * @param response
      */
-    @RequestMapping(path = {"/farmer/{farmer_id}/orders"}, method = RequestMethod.GET)
-    public void farmerOrderAccountInfo(@PathVariable("farmer_id") long farmerId,
+    @RequestMapping(path = {"/farmer/orders"}, method = RequestMethod.GET)
+    public void farmerOrderAccountInfo(@RequestParam("farmer_id") long farmerId,
                                        @RequestParam(value = "offset", required = false, defaultValue = "0") String offset,
                                        HttpServletResponse response) {
         Map<String, Object> dataMap = new HashMap<>();
@@ -113,7 +114,7 @@ public class OrderController extends BaseController {
         try {
             int parsedOffset = Integer.parseInt(offset);
             int nextOffset = parsedOffset + Constants.LIMIT;
-            List<Order> orders = orderService.getAllOrdersByFarmer(farmerId, offset);
+            List<Order> orders = orderService.getAllOrdersByFarmer(farmerId, parsedOffset);
             dataMap.put("list", orders);
             dataMap.put("offset", nextOffset);
             result = resultMapping(HttpStatusCode.SUCCESS, "查询成功", dataMap);
@@ -128,9 +129,13 @@ public class OrderController extends BaseController {
 
     /**
      * 供应商查看订单列表
+     *
+     * @param vendorId
+     * @param offset
+     * @param response
      */
-    @RequestMapping(path = {"/vendor/{vendor_id}/orders"}, method = RequestMethod.GET)
-    public void vendorOrderAccountInfo(@PathVariable("vendor_id") long vendorId,
+    @RequestMapping(path = {"/vendor/orders"}, method = RequestMethod.GET)
+    public void vendorOrderAccountInfo(@RequestParam("vendor_id") long vendorId,
                                        @RequestParam(value = "offset", required = false, defaultValue = "0") String offset,
                                        HttpServletResponse response) {
         Map<String, Object> dataMap = new HashMap<>();
@@ -138,7 +143,7 @@ public class OrderController extends BaseController {
         try {
             int parsedOffset = Integer.parseInt(offset);
             int nextOffset = parsedOffset + Constants.LIMIT;
-            List<Order> orders = orderService.getAllOrdersByVendor(vendorId, offset);
+            List<Order> orders = orderService.getAllOrdersByVendor(vendorId, parsedOffset);
             dataMap.put("list", orders);
             dataMap.put("offset", nextOffset);
             result = resultMapping(HttpStatusCode.SUCCESS, "查询成功", dataMap);

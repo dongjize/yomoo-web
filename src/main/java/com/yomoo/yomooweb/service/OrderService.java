@@ -1,5 +1,6 @@
 package com.yomoo.yomooweb.service;
 
+import com.yomoo.yomooweb.entity.FodderOfVendor;
 import com.yomoo.yomooweb.entity.Order;
 import com.yomoo.yomooweb.entity.OrderEntry;
 import com.yomoo.yomooweb.mapper.FodderMapper;
@@ -26,38 +27,37 @@ public class OrderService {
     private FodderMapper fodderMapper;
 
     public void addOrder(Order order) {
-//        OrderEntry entry = order.getOrderEntries().get(0);
         orderMapper.insertOrder(order);
     }
 
-    public void addOrderEntry(OrderEntry entry) {
+    public void addOrderEntry(Long fvId, OrderEntry entry) {
         orderMapper.insertOrderEntry(entry);
-        fodderMapper.updateFodderOfVendorAfterSell(entry.getFv());
+        fodderMapper.updateFodderOfVendorAfterSell(fvId, entry.getQuantity());
     }
 
-    public List<Order> getAllOrdersByFarmer(long farmerId, String offset) {
+    public List<Order> getAllOrdersByFarmer(long farmerId, int offset) {
         List<Order> orders = orderMapper.selectOrdersByFarmerId(farmerId, offset);
-        for (Order order : orders) {
-            List<OrderEntry> entries = order.getOrderEntries();
-            float totalPrice = 0;
+//        for (Order order : orders) {
+//            List<OrderEntry> entries = order.getOrderEntries();
+//            float totalPrice = 0;
 //            for (OrderEntry entry : entries) {
 //                totalPrice += entry.getSellPrice() * entry.getQuantity();
 //            }
-            order.setTotalPrice(totalPrice);
-        }
+//            order.setTotalPrice(totalPrice);
+//        }
         return orders;
     }
 
-    public List<Order> getAllOrdersByVendor(long vendorId, String offset) {
+    public List<Order> getAllOrdersByVendor(long vendorId, int offset) {
         List<Order> orders = orderMapper.selectOrdersByVendorId(vendorId, offset);
-        for (Order order : orders) {
-            List<OrderEntry> entries = order.getOrderEntries();
-            float totalPrice = 0;
+//        for (Order order : orders) {
+//            List<OrderEntry> entries = order.getOrderEntries();
+//            float totalPrice = 0;
 //            for (OrderEntry entry : entries) {
 //                totalPrice += entry.getSellPrice() * entry.getQuantity();
 //            }
-            order.setTotalPrice(totalPrice);
-        }
+//            order.setTotalPrice(totalPrice);
+//        }
         return orders;
     }
 

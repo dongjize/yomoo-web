@@ -70,7 +70,7 @@ CREATE TABLE `purchase` (
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-# 饲料进货条目（fodder和purchase的中间表）
+# 饲料进货条目（fodder和`purchase的中间表）
 DROP TABLE IF EXISTS `purchase_entry`;
 CREATE TABLE `purchase_entry` (
   `id`             INT UNSIGNED          AUTO_INCREMENT PRIMARY KEY,

@@ -8,21 +8,17 @@
         <id column="id" property="id"/>
         <result column="order_type" property="orderType"/>
         <result column="tips" property="tips"/>
+        <result column="created_at" property="createdAt"/>
         <association property="vendor" column="vendor_id" select="selectVendorById"/>
-        <association property="farmer" column="farmer_id" select="selectFarmerById"/>
-        <collection property="orderEntries" column="id" ofType="OrderEntry" select="selectOrderEntriesByOrderId">
-            <!--<id column="id" property="id"/>-->
-            <!--<result column="quantity" property="quantity"/>-->
-            <!--<result column="sell_price" property="sellPrice"/>-->
-            <!--<association property="fv" column="fv_id" select="selectFodderOfVendorId"/>-->
-        </collection>
+        <association property="buyer" column="farmer_id" select="selectFarmerById"/>
+        <collection property="orderEntries" column="id" ofType="OrderEntry" select="selectOrderEntriesByOrderId"/>
     </resultMap>
 
     <resultMap id="OrderEntryResult" type="OrderEntry" autoMapping="false">
         <id column="id" property="id"/>
         <result column="quantity" property="quantity"/>
         <result column="sell_price" property="sellPrice"/>
-        <association property="fv" column="fv_id" select="selectFodderOfVendorId"/>
+        <association property="fv" column="fv_id" select="selectFodderOfVendorById"/>
     </resultMap>
 
     <resultMap id="FarmerResult" type="Farmer" autoMapping="false">
@@ -40,7 +36,22 @@
         <result column="type" property="type" jdbcType="VARCHAR"/>
         <result column="intro" property="intro" jdbcType="VARCHAR"/>
         <result column="created_at" property="createdAt" jdbcType="DATE"/>
-        <association column="id" property="id" select="selectVendorById"/>
+    </resultMap>
+
+    <resultMap id="FodderOfVendorResult" type="FodderOfVendor">
+        <id column="id" property="id"/>
+        <result column="sell_price" property="sellPrice"/>
+        <result column="stock" property="stock"/>
+        <association property="fodder" column="fodder_id" select="selectFodderById"/>
+        <association property="vendor" column="vendor_id" select="selectVendorById"/>
+    </resultMap>
+
+    <resultMap id="FodderResult" type="Fodder" autoMapping="false">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="fodder_spec" property="fodderSpec"/>
+        <result column="description" property="description"/>
+        <result column="created_at" property="createdAt"/>
     </resultMap>
 
     <insert id="insertOrder" keyColumn="id" keyProperty="id" parameterType="Order" useGeneratedKeys="true">
@@ -55,12 +66,19 @@
         LIMIT 20 OFFSET #{offset}
     </select>
 
+    <select id="selectOrdersByVendorId" resultMap="OrderResult">
+        SELECT *
+        FROM `order`
+        WHERE vendor_id = #{vendorId}
+        LIMIT 20 OFFSET #{offset}
+    </select>
+
     <insert id="insertOrderEntry" keyColumn="id" keyProperty="id" parameterType="OrderEntry" useGeneratedKeys="true">
         INSERT INTO order_entry (fv_id, order_id, quantity, sell_price)
         VALUES (#{fv.id}, #{orderId}, #{quantity}, #{sellPrice})
     </insert>
 
-    <select id="selectOrderEntriesByOrderId" resultMap="OrderResult">
+    <select id="selectOrderEntriesByOrderId" resultMap="OrderEntryResult">
         SELECT *
         FROM order_entry
         WHERE order_id = #{orderId};
@@ -77,5 +95,17 @@
         FROM yomoo.farmer
             INNER JOIN yomoo.user ON yomoo.farmer.id = yomoo.user.id
         WHERE farmer.id = #{id}
+    </select>
+
+    <select id="selectFodderOfVendorById" resultMap="FodderOfVendorResult">
+        SELECT *
+        FROM fodder_vendor
+        WHERE id = #{id};
+    </select>
+
+    <select id="selectFodderById" resultMap="FodderResult">
+        SELECT *
+        FROM fodder
+        WHERE id = #{id}
     </select>
 </mapper>

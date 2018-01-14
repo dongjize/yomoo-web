@@ -54,7 +54,7 @@
     <update id="updateFodderOfVendorAfterSell">
         UPDATE fodder_vendor
         SET stock = stock - #{quantity}
-        WHERE id = #{fv.id}
+        WHERE id = #{id}
     </update>
 
     <select id="selectFodderOfVendorByFodderAndVendor" resultMap="FodderOfVendorResult">

@@ -31,6 +31,8 @@ public class FarmerController extends BaseController {
     @Autowired
     private FarmerService farmerService;
 
+
+
     /**
      * 养殖户个人详情
      *

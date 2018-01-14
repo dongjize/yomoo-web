@@ -22,11 +22,9 @@ public interface OrderMapper {
 
     void insertOrder(Order order);
 
+    List<Order> selectOrdersByFarmerId(@Param("farmerId") Long farmerId, @Param("offset") int offset);
 
-    List<Order> selectOrdersByFarmerId(@Param("farmerId") long farmerId, @Param("offset") String offset);
-
-    //    @Select({"SELECT * FROM order WHERE vendor_id = #{vendorId} LIMIT 20 OFFSET #{offset}"})
-    List<Order> selectOrdersByVendorId(@Param("vendorId") long vendorId, @Param("offset") String offset);
+    List<Order> selectOrdersByVendorId(@Param("vendorId") Long vendorId, @Param("offset") int offset);
 
 
     void insertOrderEntry(OrderEntry orderEntry);

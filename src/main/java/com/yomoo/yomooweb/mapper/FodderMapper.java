@@ -24,9 +24,9 @@ public interface FodderMapper {
 
     void insertFodderOfVendor(FodderOfVendor fv);
 
-    void updateFodderOfVendorAfterPurchase(Long id);
+    void updateFodderOfVendorAfterPurchase(@Param("id") Long id, @Param("quantity") int quantity);
 
-    void updateFodderOfVendorAfterSell(FodderOfVendor fv);
+    void updateFodderOfVendorAfterSell(@Param("id") Long id, @Param("quantity") int quantity);
 
     Fodder selectFodderById(long id);
 

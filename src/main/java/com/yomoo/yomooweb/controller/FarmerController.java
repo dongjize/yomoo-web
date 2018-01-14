@@ -1,9 +1,7 @@
 package com.yomoo.yomooweb.controller;
 
 import com.yomoo.yomooweb.entity.Farmer;
-import com.yomoo.yomooweb.entity.Order;
 import com.yomoo.yomooweb.service.FarmerService;
-import com.yomoo.yomooweb.utils.Constants;
 import com.yomoo.yomooweb.utils.HttpStatusCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

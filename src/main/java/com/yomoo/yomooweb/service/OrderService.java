@@ -5,6 +5,7 @@ import com.yomoo.yomooweb.entity.Order;
 import com.yomoo.yomooweb.entity.OrderEntry;
 import com.yomoo.yomooweb.mapper.FodderMapper;
 import com.yomoo.yomooweb.mapper.OrderMapper;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

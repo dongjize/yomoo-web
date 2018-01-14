@@ -40,4 +40,8 @@ public interface UserMapper {
 
     //    @Select({"SELECT * FROM user LIMIT 20 OFFSET #{offset}"})
     List<User> selectAllUsers(int offset);
+
+    List<User> selectUsersByKeyword(@Param("keyword") String keyword, @Param("type") String type, @Param("offset") int offset);
+
+    List<User> selectUsersByKeywordNoType(@Param("keyword") String keyword, @Param("offset") int offset);
 }

@@ -1,5 +1,13 @@
 package com.yomoo.yomooweb.solr;
 
+import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.data.solr.core.SolrTemplate;
+import org.springframework.data.solr.repository.config.EnableSolrRepositories;
+
 /**
  * Description:
  *
@@ -7,34 +15,23 @@ package com.yomoo.yomooweb.solr;
  * @Date: 2018-01-14
  * @Time: 14:34
  */
+
+@Configuration
+@EnableSolrRepositories(basePackages = {"com.yomoo.yomooweb"}, multicoreSupport = true)
 public class SolrConfig {
+    @Value("${spring.data.solr.host}")
+    private String url;
 
-    private String host;
-    private String zkHost;
-    private String defaultCollection;
-
-
-    public String getDefaultCollection() {
-        return defaultCollection;
+    @Bean
+    public SolrClient solrClient() {
+        return new HttpSolrClient(url);
     }
 
-    public void setDefaultCollection(String defaultCollection) {
-        this.defaultCollection = defaultCollection;
+    @Bean
+    public SolrTemplate solrTemplate() throws Exception {
+        SolrTemplate solrTemplate = new SolrTemplate(solrClient());
+//		solrTemplate.setSolrConverter(solrConverter);
+        return solrTemplate;
     }
 
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public String getZkHost() {
-        return zkHost;
-    }
-
-    public void setZkHost(String zkHost) {
-        this.zkHost = zkHost;
-    }
 }

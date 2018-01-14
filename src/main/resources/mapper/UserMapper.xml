@@ -48,4 +48,18 @@
         WHERE type = #{type}
         LIMIT 20 OFFSET #{offset}
     </select>
+
+    <select id="selectUsersByKeyword" resultMap="UserResult">
+        SELECT *
+        FROM user
+        WHERE phone LIKE '%#{keyword}%' AND type = #{type}
+        LIMIT 20 OFFSET #{offset}
+    </select>
+
+    <select id="selectUsersByKeywordNoType" resultMap="UserResult">
+        SELECT *
+        FROM user
+        WHERE phone LIKE '%#{keyword}%'
+        LIMIT 20 OFFSET #{offset}
+    </select>
 </mapper>

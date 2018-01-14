@@ -1,6 +1,7 @@
 package com.yomoo.yomooweb.entity;
 
 import com.google.gson.annotations.SerializedName;
+import org.apache.solr.client.solrj.beans.Field;
 
 import java.io.Serializable;
 
@@ -12,8 +13,11 @@ import java.io.Serializable;
  * @Time: 21:43
  */
 public abstract class BaseModel implements Serializable {
+    @Field
     @SerializedName("created_at")
     protected String createdAt;
+
+    @Field
     @SerializedName("updated_at")
     protected String updatedAt;
 

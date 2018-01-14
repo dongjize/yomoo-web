@@ -1,6 +1,8 @@
 package com.yomoo.yomooweb.entity;
 
 import com.google.gson.annotations.SerializedName;
+import org.apache.solr.client.solrj.beans.Field;
+import org.springframework.data.annotation.Id;
 
 import java.util.List;
 
@@ -9,22 +11,30 @@ import java.util.List;
  */
 public class Order extends BaseModel {
 
+    @Id
+    @Field
     private Long id;
 
+    @Field
     @SerializedName("order_entries")
     private List<OrderEntry> orderEntries; // 订单条目，一对多
 
+    @Field
     @SerializedName("buyer")
     private Farmer buyer; // 养殖户，多对一
 
+    @Field
     @SerializedName("vendor")
     private User vendor; // 销售商，多对一
 
+    @Field
     @SerializedName("order_type")
     private String orderType; // 订单类型，owed / payed
 
+    @Field
     private String tips;
 
+    @Field
     @SerializedName("total_price")
     private float totalPrice;
 

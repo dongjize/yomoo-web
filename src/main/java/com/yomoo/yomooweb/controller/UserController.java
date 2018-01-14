@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -257,7 +257,35 @@ public class UserController extends BaseController {
             result = resultMapping(HttpStatusCode.SERVER_ERROR, e.getMessage(), dataMap);
         } finally {
             printResult(response, result);
+        }
+    }
 
+    @CrossOrigin
+    @RequestMapping(path = {"/solr/users"}, method = {RequestMethod.GET})
+    public void queryUserList(@RequestParam(value = "key", required = false, defaultValue = "") String keyword,
+                              @RequestParam(value = "offset", required = false, defaultValue = "0") String offset,
+                              @RequestParam(value = "type", required = false) String type,
+                              HttpServletResponse response) {
+        Map<String, Object> dataMap = new HashMap<>();
+        String result = "";
+        try {
+            int parsedOffset = Integer.parseInt(offset);
+            int nextOffset = parsedOffset + Constants.LIMIT;
+            List<User> userList;
+            if (StringUtils.isEmpty(type)) {
+                userList = userService.getUsersByKeyword(keyword, parsedOffset);
+            } else {
+                userList = userService.getUsersByKeyword(keyword, type, parsedOffset);
+//                userList = userService.getUsersByTypeBySolr(keyword, type, parsedOffset);
+            }
+            dataMap.put("list", userList);
+            dataMap.put("offset", nextOffset);
+            result = resultMapping(HttpStatusCode.SUCCESS, "请求成功", dataMap);
+        } catch (Exception e) {
+            logger.error("EXCEPTION: " + e.getMessage());
+            result = resultMapping(HttpStatusCode.SERVER_ERROR, e.getMessage(), dataMap);
+        } finally {
+            printResult(response, result);
         }
     }
 

@@ -10,13 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -157,16 +155,40 @@ public class OrderController extends BaseController {
     }
 
 
-    @RequestMapping(path = {"/orders_query"}, method = {RequestMethod.GET})
-    public void queryOrderList(@RequestParam(value = "key", required = false, defaultValue = "") String keyword,
-                                @RequestParam(value = "offset", required = false, defaultValue = "0") String offset,
-                                HttpServletResponse response) {
+    @RequestMapping(path = {"/vendor_orders_query"}, method = {RequestMethod.GET})
+    public void queryVendorOrderList(@RequestParam(value = "key", required = false, defaultValue = "") String keyword,
+                               @RequestParam("vendor_id") long vendorId,
+                               @RequestParam(value = "offset", required = false, defaultValue = "0") String offset,
+                               HttpServletResponse response) {
         Map<String, Object> dataMap = new HashMap<>();
         String result = "";
         try {
             int parsedOffset = Integer.parseInt(offset);
             int nextOffset = parsedOffset + Constants.LIMIT;
-            List<Order> orderList = orderService.getOrdersByKeyword(keyword, parsedOffset);
+            List<Order> orderList = orderService.getVendorOrdersByKeyword(keyword, vendorId, parsedOffset);
+            dataMap.put("list", orderList);
+            dataMap.put("offset", nextOffset);
+            result = resultMapping(HttpStatusCode.SUCCESS, "请求成功", dataMap);
+        } catch (Exception e) {
+            logger.error("EXCEPTION: " + e.getMessage());
+            result = resultMapping(HttpStatusCode.SERVER_ERROR, e.getMessage(), dataMap);
+        } finally {
+            printResult(response, result);
+        }
+    }
+
+
+    @RequestMapping(path = {"/farmer_orders_query"}, method = {RequestMethod.GET})
+    public void queryFarmerOrderList(@RequestParam(value = "key", required = false, defaultValue = "") String keyword,
+                               @RequestParam("farmer_id") long farmerId,
+                               @RequestParam(value = "offset", required = false, defaultValue = "0") String offset,
+                               HttpServletResponse response) {
+        Map<String, Object> dataMap = new HashMap<>();
+        String result = "";
+        try {
+            int parsedOffset = Integer.parseInt(offset);
+            int nextOffset = parsedOffset + Constants.LIMIT;
+            List<Order> orderList = orderService.getFarmerOrdersByKeyword(keyword, farmerId, parsedOffset);
             dataMap.put("list", orderList);
             dataMap.put("offset", nextOffset);
             result = resultMapping(HttpStatusCode.SUCCESS, "请求成功", dataMap);

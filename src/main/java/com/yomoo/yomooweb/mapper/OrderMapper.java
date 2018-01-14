@@ -31,5 +31,7 @@ public interface OrderMapper {
 
     List<OrderEntry> selectOrderEntriesByOrderId(long orderId);
 
-    List<Order> selectOrdersByKeyword(@Param("keyword") String keyword, @Param("offset") int offset);
+    List<Order> selectOrdersByVendorKeyword(@Param("keyword") String keyword, @Param("vendorId") long vendorId, @Param("offset") int offset);
+
+    List<Order> selectOrdersByFarmerKeyword(@Param("keyword") String keyword, @Param("farmerId") long farmerId, @Param("offset") int offset);
 }

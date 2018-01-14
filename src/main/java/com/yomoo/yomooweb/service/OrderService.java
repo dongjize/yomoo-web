@@ -60,7 +60,11 @@ public class OrderService {
         return orders;
     }
 
-    public List<Order> getOrdersByKeyword(String keyword, int offset) {
-        return orderMapper.selectOrdersByKeyword(keyword, offset);
+    public List<Order> getVendorOrdersByKeyword(String keyword, long vendorId, int offset) {
+        return orderMapper.selectOrdersByVendorKeyword(keyword, vendorId, offset);
+    }
+
+    public List<Order> getFarmerOrdersByKeyword(String keyword, long farmerId, int offset) {
+        return orderMapper.selectOrdersByFarmerKeyword(keyword, farmerId, offset);
     }
 }

@@ -109,17 +109,35 @@
         WHERE id = #{id}
     </select>
 
-    <select id="selectOrdersByKeyword" resultMap="OrderResult">
+    <select id="selectOrdersByVendorKeyword" resultMap="OrderResult">
         SELECT *
         FROM `order`
             LEFT JOIN order_entry ON `order`.id = order_entry.order_id
             LEFT JOIN user ON `order`.vendor_id = user.id
+            LEFT JOIN farmer ON `order`.farmer_id = farmer.id
             LEFT JOIN fodder_vendor ON order_entry.fv_id = fodder_vendor.id
             LEFT JOIN fodder ON fodder_vendor.fodder_id = fodder.id
         WHERE order_type LIKE '%' #{keyword} '%' OR tips LIKE '%' #{keyword} '%'
               OR fodder_vendor.sell_price LIKE '%' #{keyword} '%' OR quantity LIKE '%' #{keyword} '%'
               OR fodder.name LIKE '%' #{keyword} '%' OR fodder_spec LIKE '%' #{keyword} '%' OR
               user.name LIKE '%' #{keyword} '%'
+              AND `order`.vendor_id = #{vendorId}
+        LIMIT 20 OFFSET #{offset}
+    </select>
+
+    <select id="selectOrdersByFarmerKeyword" resultMap="OrderResult">
+        SELECT *
+        FROM `order`
+            LEFT JOIN order_entry ON `order`.id = order_entry.order_id
+            LEFT JOIN user ON `order`.vendor_id = user.id
+            LEFT JOIN farmer ON `order`.farmer_id = farmer.id
+            LEFT JOIN fodder_vendor ON order_entry.fv_id = fodder_vendor.id
+            LEFT JOIN fodder ON fodder_vendor.fodder_id = fodder.id
+        WHERE order_type LIKE '%' #{keyword} '%' OR tips LIKE '%' #{keyword} '%'
+              OR fodder_vendor.sell_price LIKE '%' #{keyword} '%' OR quantity LIKE '%' #{keyword} '%'
+              OR fodder.name LIKE '%' #{keyword} '%' OR fodder_spec LIKE '%' #{keyword} '%' OR
+              user.name LIKE '%' #{keyword} '%'
+              AND `order`.farmer_id = #{farmerId}
         LIMIT 20 OFFSET #{offset}
     </select>
 </mapper>

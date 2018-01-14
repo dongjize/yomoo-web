@@ -6,6 +6,9 @@ import com.yomoo.yomooweb.service.FodderService;
 import com.yomoo.yomooweb.service.OrderService;
 import com.yomoo.yomooweb.utils.Constants;
 import com.yomoo.yomooweb.utils.HttpStatusCode;
+import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.common.SolrDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,6 +44,18 @@ public class OrderController extends BaseController {
 
     @Autowired
     private FarmerService farmerService;
+
+    @Autowired
+    private SolrClient solrClient;
+
+
+    @RequestMapping()
+    public String testSolr() throws IOException, SolrServerException {
+        SolrDocument document = solrClient.getById("test", "7");
+        System.out.println(document);
+        return document.toString();
+
+    }
 
 
     /**
